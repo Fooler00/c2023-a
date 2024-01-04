@@ -1,11 +1,7 @@
 #include <graphics.h>
-
 #include <conio.h>
 #include "Myprint.h"
-
-
 using namespace std;
-
 int main()
 {
     Myprint chess;
