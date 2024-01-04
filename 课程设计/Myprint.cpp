@@ -1,10 +1,10 @@
-#include <graphics.h>// 引用 EasyX 图形库
 #include <iostream>
-#include "Myprint.h"
+#include <graphics.h>// 引用 EasyX 图形库
 #include <conio.h>
-#include <algorithm>
-#include <string>
+#include <algorithm
 #include <time.h>
+>#include <string>
+#include "Myprint.h"
 #define ONE 10
 #define TWO 100
 #define THREE 1000
@@ -14,7 +14,7 @@
 #define BLOCKED_TWO 10
 #define BLOCKED_THREE 100
 #define BLOCKED_FOUR 1000
-#define deep  4
+#define deep  6
 using namespace std;
 
 double x=0;
@@ -73,7 +73,7 @@ void Myprint::printmouse() {
                 currentPos.X = (msg.x + 15) / 30;
                 currentPos.Y = (msg.y + 15) / 30;
                 chessboard[currentPos.Y][currentPos.X] = flag;
-                flag *= -1;
+                flag*=(-1)
             }
             break;
     }
@@ -81,26 +81,24 @@ void Myprint::printmouse() {
 
 void Myprint::printact() {
     BeginBatchDraw();
-    setlinecolor(RED);              //设置线颜色
+    setlinecolor(RED);             
     for (int y = 0; y < 2; y++) {
         for ( x = 0; x < 2; x++) {
-            //currentPos绘制
-            //画横线
             line(currentPos.X * 30 - 15, currentPos.Y * 30 - 15 + y * 30,
                  currentPos.X * 30 - 5, currentPos.Y * 30 - 15 + y * 30);
             line(currentPos.X * 30 + 5, currentPos.Y * 30 - 15 + y * 30,
                  currentPos.X * 30 + 15, currentPos.Y * 30 - 15 + y * 30);
-            //画竖线
+        
             line(currentPos.X * 30 - 15 + 30 * y, currentPos.Y * 30 - 15,
                  currentPos.X * 30 - 15 + 30 * y, currentPos.Y * 30 - 5);
             line(currentPos.X * 30 - 15 + 30 * y, currentPos.Y * 30 + 5,
                  currentPos.X * 30 - 15 + 30 * y, currentPos.Y * 30 + 15);
-            //waitPos绘制
+            
             line(waitPos.X * 30 - 15, waitPos.Y * 30 - 15 + y * 30,
                  waitPos.X * 30 - 5, waitPos.Y * 30 - 15 + y * 30);
             line(waitPos.X * 30 + 5, waitPos.Y * 30 - 15 + y * 30,
                  waitPos.X * 30 + 15, waitPos.Y * 30 - 15 + y * 30);
-            //画竖线
+           
             line(waitPos.X * 30 - 15 + 30 * y, waitPos.Y * 30 - 15,
                  waitPos.X * 30 - 15 + 30 * y, waitPos.Y * 30 - 5);
             line(waitPos.X * 30 - 15 + 30 * y, waitPos.Y * 30 + 5,
@@ -111,7 +109,7 @@ void Myprint::printact() {
 }
 
 bool Myprint::chessjudge(int y,int x,int board[16][16]) {
-    //横向判断
+    
     int arr[4] = {0}, index = 1;
     while (x - index > 0 && board[y][x - index] == board[y][x] && board[y][x] != 0) {
         index++;
@@ -122,7 +120,7 @@ bool Myprint::chessjudge(int y,int x,int board[16][16]) {
         index++;
         arr[0]++;
     }
-    //纵向判断
+    
     index = 1;
     while (y - index > 0 && board[y - index][x] == board[y][x] && board[y][x] != 0) {
         index++;
@@ -133,7 +131,7 @@ bool Myprint::chessjudge(int y,int x,int board[16][16]) {
         index++;
         arr[1]++;
     }
-    //判断左上
+   
     index = 1;
     while (x - index > 0 && y - index > 0 && board[y - index][x - index] == board[y][x] && board[y][x] != 0) {
         index++;
@@ -144,7 +142,7 @@ bool Myprint::chessjudge(int y,int x,int board[16][16]) {
         index++;
         arr[2]++;
     }
-    //判断右上
+   
     index = 1;
     while (x - index > 0 && y + index <= 15 && board[y + index][x - index] == board[y][x] && board[y][x] != 0) {
         index++;
@@ -165,7 +163,7 @@ bool Myprint::chessjudge(int y,int x,int board[16][16]) {
 
 void Myprint::printend() {
    HWND hnd = GetHWnd();
-   SetWindowText(hnd, "GoBang Game");
+   SetWindowText(hnd, "Happy Game!");
     int is_ok;
     if (flag==-1) {
         is_ok = MessageBox(hnd, "Black Win!", "Game Over", MB_OK);
@@ -177,12 +175,12 @@ void Myprint::printend() {
 
 void Myprint::printstart() {
     HWND hnd = GetHWnd();
-    SetWindowText(hnd, "GoBang Game");
+    SetWindowText(hnd, "Happy Game!");
     int is_first;
     is_first=MessageBox(hnd, "You Fisrt?", "Game Start", MB_YESNO);
     if (is_first==IDNO) {
         chessboard[8][8] = 1;
-        /*flag *= -1;*/
+       
         while (true) {
             printboard();
             printchess();
@@ -219,7 +217,7 @@ void Myprint::printstart() {
     }
 }
 
-void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16][16]) {
+void Myprint::Attack(int y,int x,int flag,int board_[16][16],int ScoreBoard[16][16]) {
     int empty=0;
     int count=1;
     int block=0;
@@ -229,7 +227,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             block++;
             break;
         }
-        int tmp=Vmboard[y][i];
+        int tmp=board_[y][i];
         if (flag==tmp){
             count++;
         }
@@ -238,8 +236,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[y][i+1]==0||Vmboard[y][i+1]==-flag||i+1>15){
-                while (Vmboard[y][i]!=-flag&&i<=15&&roable+empty+count<=6){
+            if (board_[y][i+1]==0||board_[y][i+1]==-flag||i+1>15){
+                while (board_[y][i]!=-flag&&i<=15&&roable+empty+count<=6){
                     roable++;
                     i++;
                 }
@@ -255,7 +253,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             block++;
             break;
         }
-        int tmp=Vmboard[y][i];
+        int tmp=board_[y][i];
         if (flag==tmp){
             count++;
         }
@@ -264,8 +262,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[y][i-1]==0||Vmboard[y][i-1]==-flag||i-1<1){
-                while (Vmboard[y][i]!=-flag&&i>=1&&roable+empty+count<=6){
+            if (board_[y][i-1]==0||board_[y][i-1]==-flag||i-1<1){
+                while (board_[y][i]!=-flag&&i>=1&&roable+empty+count<=6){
                     roable++;
                     i--;
                 }
@@ -277,7 +275,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
         }
     }
     ScoreBoard[y][x]+=ScoreGet(empty,count,block,roable);
-    //纵向判断
+  
     empty=0;
     count=1;
     block=0;
@@ -296,8 +294,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[i+1][x]==0||Vmboard[i+1][x]==-flag||i+1>15){
-                while (Vmboard[i+1][x]!=-flag&&i<=15&&roable+empty+count<=6){
+            if (board_[i+1][x]==0||board_[i+1][x]==-flag||i+1>15){
+                while (board_[i+1][x]!=-flag&&i<=15&&roable+empty+count<=6){
                     roable++;
                     i++;
                 }
@@ -313,7 +311,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             block++;
             break;
         }
-        int tmp=Vmboard[i][x];
+        int tmp=board_[i][x];
         if (flag==tmp){
             count++;
         }
@@ -322,8 +320,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[i-1][x]==0||Vmboard[i-1][x]==-flag||i-1<1){
-                while (Vmboard[i-1][x]!=-flag&&i>=1&&roable+empty+count<=6){
+            if (board_[i-1][x]==0||board_[i-1][x]==-flag||i-1<1){
+                while (board_[i-1][x]!=-flag&&i>=1&&roable+empty+count<=6){
                     roable++;
                     i--;
                 }
@@ -354,8 +352,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[i+1][j+1]==0||Vmboard[i+1][j+1]==-flag||i+1>15||j+1>15){
-                while (Vmboard[i+1][j+1]!=-flag&&i<=15&&j<=15&&roable+empty+count<=6){
+            if (board_[i+1][j+1]==0||board_[i+1][j+1]==-flag||i+1>15||j+1>15){
+                while (board_[i+1][j+1]!=-flag&&i<=15&&j<=15&&roable+empty+count<=6){
                     roable++;
                     i++;j++;
                 }
@@ -371,7 +369,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             block++;
             break;
         }
-        int tmp=Vmboard[i][j];
+        int tmp=board_[i][j];
         if (flag==tmp){
             count++;
         }
@@ -380,8 +378,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[i-1][j-1]==0||Vmboard[i-1][j-1]==-flag||i-1<1||j-1<1){
-                while (Vmboard[i-1][j-1]!=-flag&&i>=1&&j>=1&&roable+empty+count<=6){
+            if (board_[i-1][j-1]==0||board_[i-1][j-1]==-flag||i-1<1||j-1<1){
+                while (board_[i-1][j-1]!=-flag&&i>=1&&j>=1&&roable+empty+count<=6){
                     roable++;
                     i--;j--;
                 }
@@ -403,7 +401,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             block++;
             break;
         }
-        int tmp=Vmboard[i][j];
+        int tmp=board_[i][j];
         if (flag==tmp){
             count++;
         }
@@ -412,8 +410,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[i+1][j-1]==0||Vmboard[i+1][j-1]==-flag||i+1>15||j-1<1){
-                while (Vmboard[i+1][j-1]!=-flag&&i<=15&&j>=1&&roable+empty+count<=6){
+            if (board_[i+1][j-1]==0||board_[i+1][j-1]==-flag||i+1>15||j-1<1){
+                while (board_[i+1][j-1]!=-flag&&i<=15&&j>=1&&roable+empty+count<=6){
                     roable++;
                     i++;j--;
                 }
@@ -429,7 +427,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             block++;
             break;
         }
-        int tmp=Vmboard[i][j];
+        int tmp=board_[i][j];
         if (flag==tmp){
             count++;
         }
@@ -438,8 +436,8 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
             break;
         }
         else {
-            if (Vmboard[i-1][j+1]==0||Vmboard[i-1][j+1]==-flag||i-1<1||j+1>15){
-                while (Vmboard[i-1][j+1]!=-flag&&i>=1&&j<=15&&roable+empty+count<=6){
+            if (board_[i-1][j+1]==0||board_[i-1][j+1]==-flag||i-1<1||j+1>15){
+                while (board_[i-1][j+1]!=-flag&&i>=1&&j<=15&&roable+empty+count<=6){
                     roable++;
                     i--;j++;
                 }
@@ -461,16 +459,16 @@ int Myprint::AllScore(Node_Tree *p) {
     string array[100];
     for (int i = 1; i <= 15; i++) {
         for (int j = 1; j <= 15; j++) {
-            array[i] = array[i] + char(int(p->VmBoard[i][j] + 1) + '0');
-            array[i + 15] = array[i + 15] + char(int(p->VmBoard[j][i] + 1) + '0');
+            array[i] = array[i] + char(int(p->Board_[i][j] + 1) + '0');
+            array[i + 15] = array[i + 15] + char(int(p->Board_[j][i] + 1) + '0');
         }
     }
     for (int k = 1; k <= 15; k++) {
         for (int i = k, j = 1; i <= 15; ++i, ++j) {
-            array[k + 30] = array[k + 30] + char(int(p->VmBoard[i][j] + 1) + '0');
-            array[k + 45] = array[k + 45] + char(int(p->VmBoard[16 - i][j] + 1) + '0');
-            array[k + 60] = array[k + 60] + char(int(p->VmBoard[16 - j][i] + 1) + '0');
-            array[k + 75] = array[k + 75] + char(int(p->VmBoard[j][i] + 1) + '0');
+            array[k + 30] = array[k + 30] + char(int(p->Board_[i][j] + 1) + '0');
+            array[k + 45] = array[k + 45] + char(int(p->Board_[16 - i][j] + 1) + '0');
+            array[k + 60] = array[k + 60] + char(int(p->Board_[16 - j][i] + 1) + '0');
+            array[k + 75] = array[k + 75] + char(int(p->Board_[j][i] + 1) + '0');
         }
     }
     array[61] = "0";
@@ -571,7 +569,7 @@ int Myprint::AllScore(Node_Tree *p) {
 Myprint::Node_Tree *Myprint::createroot() {
     Node_Tree *head = new Node_Tree;
     memcpy(head->VmBoard, chessboard, sizeof(chessboard));
-    /*head->score=AllScore(head);*/
+    head->score=AllScore(head);
     head->depth = 0;
     head->flag = flag;
     head->cnt = 0;
@@ -616,10 +614,10 @@ void Myprint::PrintScore(Node_Tree *p) {
     int num=0;
     for (int i = 1; i <= 15; i++) {
         for (int j = 1; j <= 15; j++) {
-            if (p->VmBoard[i][j] == 0) {
+            if (p->Board_[i][j] == 0) {
                 num++;
-                Attack(i, j,-p->flag, p->VmBoard,scoreboard);
-                Attack(i, j,p->flag, p->VmBoard,scoreboard);
+                Attack(i, j,-p->flag, p->Board_,scoreboard);
+                Attack(i, j,p->flag, p->Board_,scoreboard);
                 if (scoreboard[i][j]<50){
                     num--;
                 }
