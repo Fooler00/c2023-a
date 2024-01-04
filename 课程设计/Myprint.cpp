@@ -1,7 +1,3 @@
-//
-
-// Created by 12401 on 2022/10/26.
-//
 #include <graphics.h>// 引用 EasyX 图形库
 #include <iostream>
 #include "Myprint.h"
@@ -21,16 +17,16 @@
 #define deep  4
 using namespace std;
 
-double x=0,f=0;
+double x=0;
 int cut=0;
 
 void Myprint::printboard() {
     BeginBatchDraw();
     setbkcolor(RGB(244, 164, 96));
     cleardevice();
-    setlinestyle(PS_SOLID, 2);  // 画实线，宽度为2个像素
-    setcolor(RGB(0, 0, 0));  // 设置为黑色
-    for (int i = 1; i <= 15; i++)  // 画横线和竖线
+    setlinestyle(PS_SOLID, 2); 
+    setcolor(RGB(0, 0, 0)); 
+    for (int i = 1; i <= 15; i++)
     {
         char arr[4];
         wsprintf(arr, "%d", i);
@@ -168,11 +164,8 @@ bool Myprint::chessjudge(int y,int x,int board[16][16]) {
 }
 
 void Myprint::printend() {
-    //获取窗口句柄
-    HWND hnd = GetHWnd();
-    //设置窗口标题
-    SetWindowText(hnd, "GoBang Game");
-    //弹出窗口，提示用户操作
+   HWND hnd = GetHWnd();
+   SetWindowText(hnd, "GoBang Game");
     int is_ok;
     if (flag==-1) {
         is_ok = MessageBox(hnd, "Black Win!", "Game Over", MB_OK);
@@ -183,11 +176,8 @@ void Myprint::printend() {
 }
 
 void Myprint::printstart() {
-    //获取窗口句柄
     HWND hnd = GetHWnd();
-    //设置窗口标题
     SetWindowText(hnd, "GoBang Game");
-    //弹出窗口，提示用户操作
     int is_first;
     is_first=MessageBox(hnd, "You Fisrt?", "Game Start", MB_YESNO);
     if (is_first==IDNO) {
@@ -287,7 +277,7 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
         }
     }
     ScoreBoard[y][x]+=ScoreGet(empty,count,block,roable);
-    //竖向判断
+    //纵向判断
     empty=0;
     count=1;
     block=0;
@@ -461,7 +451,6 @@ void Myprint::Attack(int y,int x,int flag,int Vmboard[16][16],int ScoreBoard[16]
         }
     }
     ScoreBoard[y][x]+=ScoreGet(empty,count,block,roable);
-    /*cout<<ScoreBoard[y][x]<<'\t';*/
 }
 
 int Myprint::AllScore(Node_Tree *p) {
@@ -621,7 +610,6 @@ Myprint::Node_Tree *Myprint::createleaf(Node_Tree *p)  {
 }
 
 void Myprint::PrintScore(Node_Tree *p) {
-    /*cout<<1<<'\t';*/
     clock_t start,finish;
     start=clock();
     int scoreboard[16][16] = {0};
@@ -632,29 +620,22 @@ void Myprint::PrintScore(Node_Tree *p) {
                 num++;
                 Attack(i, j,-p->flag, p->VmBoard,scoreboard);
                 Attack(i, j,p->flag, p->VmBoard,scoreboard);
-                /*cout<<scoreboard[i][j]<<'\t'<<1<<'\t';*/
                 if (scoreboard[i][j]<50){
                     num--;
                 }
-                /*if (f==0)cout<<scoreboard[i][j]<<'\t';*/
             }
-            /*else if (f==0) cout<<'w'<<'\t';*/
         }
-        /*if (f==0)cout<<endl;*/
     }
-    /*cout<<num<<'\t';*/
-    f=1;
+int f=1;
     if (p->depth>1)num=4;
     finish = clock();
     p->number=num;
-    /*cout<<num<<endl;*/
     for (int k=0;k<num;k++){
         int max = 0;
         for (int i = 1; i <= 15; i++) {
             for (int j = 1; j <= 15; j++) {
                 if (scoreboard[i][j]> max)
                 {
-                    /*cout<<scoreboard[i][j]<<'\t'<<1<<'\t';*/
                     max = scoreboard[i][j];
                     p->site[k].Y = i;
                     p->site[k].X = j;
@@ -663,7 +644,6 @@ void Myprint::PrintScore(Node_Tree *p) {
         }
         scoreboard[p->site[k].Y][p->site[k].X] = 0;
     }
-    /*cout<<p->site[0].Y<<'\t'<<p->site[0].X<<endl;*/
     x+=(double)(finish - start) / CLOCKS_PER_SEC;
 }
 
@@ -679,7 +659,6 @@ Myprint::Node_Tree *Myprint::createlist(Myprint::Node_Tree *p) {
     if (tmp->depth%2==0) {
         tmp->Alpha = AllScore(tmp);
     }
-    /*cout<<tmp->score<<'\t';*/
     else {
         tmp->Beta= AllScore(tmp);
     }
@@ -687,9 +666,7 @@ Myprint::Node_Tree *Myprint::createlist(Myprint::Node_Tree *p) {
 }
 
 Myprint::Node_Tree *Myprint::Minimax(Myprint::Node_Tree *p) {
-    /*cout<<cut++<<'\t';*/
     Node_Tree *tmp = p;
-    /*cout<<p->depth<<'\t';*/
     while(tmp->depth != 0) {
         if (tmp->depth%2==0&&tmp->Alpha<tmp->Last->Beta){
             tmp->Last->Beta=tmp->Alpha;break;
@@ -697,9 +674,7 @@ Myprint::Node_Tree *Myprint::Minimax(Myprint::Node_Tree *p) {
         else if (tmp->depth%2==1&&tmp->Beta>tmp->Last->Alpha){
             tmp->Last->Alpha=tmp->Beta;break;
         }
-       /* Node_Tree *del=tmp;*/
         tmp = tmp->Last;
-        /*if (del->depth>=3)delete del;*/
         if (tmp->Beta<=tmp->Alpha&&tmp->depth!=0){
             Minimax(tmp);
         }
@@ -717,7 +692,6 @@ void Myprint::Robot() {
     f=0;
     Node_Tree *head = createroot();
     Minimax(createlist(head));
-    /*cout<<head->son[0]->score<<'\t'<<head->son[1]->score<<'\t'<<head->son[2]->score<<endl;*/
     int max = head->son[0]->Beta;
     currentPos.Y = head->site[0].Y;
     currentPos.X = head->site[0].X;
@@ -728,18 +702,13 @@ void Myprint::Robot() {
             currentPos.X = head->site[i].X;
         }
     }
-    /*cout<<max<<'\t'<<head->son[0]->Beta<<endl;*/
     cout<<x<<'\t'<<head->son[0]->Beta<<'\t'<<max<<endl;
     x=0;
-    /*cout<<head->site[1].Y<<'\t'<<head->site[1].X<<1<<endl;*/
-    /*cout<<head->son[0]->Beta<<'\t'<<max<<endl;*/
     chessboard[currentPos.Y][currentPos.X] = flag;
     flag *= -1;
 }
 
 int Myprint::ScoreGet(int empty,int count,int block,int roable){
-    /*cout<<empty<<'\t'<<count<<'\t'<<block<<'\t'<<roable<<endl;*/
-    //没有空位
     if (count+empty+roable>=5){
         if(empty == 0) {
             if(count >= 5) return FIVE;
@@ -764,7 +733,7 @@ int Myprint::ScoreGet(int empty,int count,int block,int roable){
             }
         }
         else if(empty == 1) {
-            //第1个是空位
+            //一个空位
             if(block == 0) {
                 switch(count) {
                     case 2: return TWO/2;
