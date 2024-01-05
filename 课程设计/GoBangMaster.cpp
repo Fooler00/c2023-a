@@ -6,8 +6,6 @@
 #include<random>
 using namespace std;
 using namespace placeholders;
-
-
 bool operator==(const point &p1, const point&p2)
 {
 	if (p1.x == p2.x&&p1.y == p2.y)
@@ -43,12 +41,9 @@ GoBang::GoBang()
 	extension = false;
 	printChess();
 }
-
-
 GoBang::~GoBang()
 {
 }
-
 void GoBang::addPiece(int x, int y)
 {
 	static point preCom(-1,-1), preHum(-1,-1);
@@ -99,7 +94,7 @@ void GoBang::addPiece(int x, int y)
 
 inline point GoBang::nextPoint(point p, direction d, int length)
 {
-	return { p.x + d.dx * length, p.y + d.dy * length };    //简单的数学计算
+	return { p.x + d.dx * length, p.y + d.dy * length };   
 }
 
 inline bool GoBang::fullBoard()
@@ -167,8 +162,7 @@ void GoBang::printChess()
 	}
 	cout << "+" << endl;
 }
-
-/*AI棋力的决定函数之一，评估函数的好坏决定AI棋力的因素之一*/
+//估值函数
 long GoBang::score(point p, int name,dirmark& mark)
 {
 	long totalScore = 0;
@@ -222,9 +216,7 @@ long GoBang::score(point p, int name,dirmark& mark)
 		mark[p][i] = true;
 	}
 	if (result.win5 >= 1 || result.alive4 >= 1 || result.dalive4 >= 2 || (result.dalive4 >= 1 && result.alive3 >= 1) || result.alive3 >= 2)
-		totalScore += 20000000;      //绝杀局
-	/*else if (result.dalive4 >= 1 && result.alive2 == 0 && result.dalive2 == 0 && result.die2 == 0 && result.dalive3 == 0 && result.die3 == 0)
-		totalScore += 1000;*/
+		totalScore += 20000000;      
 	else
 		totalScore += result.dalive4 * 10000 + result.die4 * 5000 + result.alive3 * 10000 + result.dalive4 * 1000 + result.die3 * 500 + result.alive2 * 1000 + result.dalive2 * 100 + result.die2 * 50 + result.alive1 * 100 + result.dalive1 * 10 + result.die1 * 5;
 	return totalScore;
@@ -250,15 +242,13 @@ long GoBang::score(point p, int name,bool &hasddie4)
 	if (result.dalive4 >= 1)
 		hasddie4 = true;
 	if (result.win5 >= 1 || result.alive4 >= 1 || result.dalive4 >= 2 || (result.dalive4 >= 1 && result.alive3 >= 1) || result.alive3 >= 2)
-		totalScore += 20000000;      //绝杀局
-	/*else if (result.dalive4 >= 1 && result.alive2 == 0 && result.dalive2 == 0 && result.die2 == 0 && result.dalive3 == 0 && result.die3 == 0)
-		totalScore += 1000;*/
+		totalScore += 20000000;      
 	else
 		totalScore += result.dalive4 * 10000 + result.die4 * 5000 + result.alive3 * 10000 + result.dalive4 * 1000 + result.die3 * 500 + result.alive2 * 1000 + result.dalive2 * 100 + result.die2 * 50 + result.alive1 * 100 + result.dalive1 * 10 + result.die1 * 5;
 	return totalScore;
 }
 
-inline long GoBang::wholeValue()    //全局调用score
+inline long GoBang::wholeValue()   
 {
 	dirmark mark(59,hasher);
 	long computerValue=0, humanValue=0;
@@ -274,130 +264,6 @@ inline long GoBang::wholeValue()    //全局调用score
 	}
 	return computerValue - humanValue;
 }
-
-/*inline long GoBang::wholeValue(point remove,char name, point add, long curValue)
-{
-	char addName = chessBoard[add.x][add.y];
-	chessBoard[add.x][add.y] = ' ';
-	long value = curValue;
-	dirmark changeList(59,hasher);
-	for (int i = 1; i <= 4; i++)
-	{
-		direction d = mapping(i);
-		point tempPoint = nextPoint(remove, d, 1);
-		vector<bool> temp(5, true);
-		for (int j = 1; j <= 4; j++)
-		{
-			if (j != i)
-				continue;
-			temp[j] = false;
-		}
-		while (isInBoard(tempPoint))
-		{
-			if (!isEmpty(tempPoint.x, tempPoint.y))
-			{
-				changeList.insert(make_pair(tempPoint, temp));
-			}
-			tempPoint = nextPoint(tempPoint, d, 1);
-		}
-		tempPoint = nextPoint(remove, d, -1);
-		while (isInBoard(tempPoint))
-		{
-			if (!isEmpty(tempPoint.x, tempPoint.y))
-			{
-				changeList.insert(make_pair(tempPoint, temp));
-			}
-			tempPoint = nextPoint(tempPoint, d, -1);
-		}
-	}
-	auto tempList = changeList;
-	chessBoard[remove.x][remove.y] = name;
-	if (name == HUMAN)
-		value += score(remove, HUMAN,changeList);
-	else
-	{
-		value -= score(remove, COMPTER,changeList);
-	}
-	for (auto node : changeList)
-	{
-		if (chessBoard[node.first.x][node.first.y] == HUMAN)
-			value += score(node.first, HUMAN,changeList);
-		else
-		{
-			value -= score(node.first, COMPTER,changeList);
-		}
-	}
-	chessBoard[remove.x][remove.y] = ' ';
-	for (auto node : tempList)
-	{
-		if (chessBoard[node.first.x][node.first.y] == HUMAN)
-			value -= score(node.first, HUMAN, tempList);
-		else
-		{
-			value += score(node.first, COMPTER, tempList);
-		}
-	}
-	dirmark mark(59,hasher);
-	mark[add] = vector<bool>(5, false);
-	for (int i = 1; i <= 4; i++)
-	{
-		vector<bool> temp(5, true);
-		for (int j = 1; j <= 4; j++)
-		{
-			if (j != i)
-				continue;
-			temp[j] = false;
-		}
-		direction d = mapping(i);
-		point tempPoint = nextPoint(add, d, 1);
-		while (isInBoard(tempPoint))
-		{
-			if (!isEmpty(tempPoint.x, tempPoint.y))
-			{
-				mark.insert(make_pair(tempPoint, temp));
-			}
-			tempPoint = nextPoint(tempPoint, d, 1);
-		}
-		tempPoint = nextPoint(add, d, -1);
-		while (isInBoard(tempPoint))
-		{
-			if (!isEmpty(tempPoint.x, tempPoint.y))
-			{
-				mark.insert(make_pair(tempPoint, temp));
-			}
-			tempPoint = nextPoint(tempPoint, d, -1);
-		}
-	}
-	/*dirmark repeat(59, hasher);
-	for (auto node : changeList)   //计算重复点，目的是避免重复计算结点分值
-	{
-		if (mark.find(node.first) != mark.end())
-		{
-			repeat.insert(*mark.find(node.first));
-		}
-	}
-	for (auto node : repeat)  //删除重复计算点的值 切记不能和上面的合并
-	{
-		if (chessBoard[node.first.x][node.first.y] == HUMAN)
-			value += score(node.first, HUMAN, repeat);
-		else
-		{
-			value -= score(node.first, COMPTER, repeat);
-		}
-	}
-	chessBoard[add.x][add.y] = addName;
-	for (auto node : mark)
-	{
-		if (chessBoard[node.first.x][node.first.y] == HUMAN)
-			value -= score(node.first, HUMAN, mark);
-		else
-		{
-			value += score(node.first, COMPTER, mark);
-		}
-	}
-	return value;
-}*/
-
 inline long GoBang::wholeValue(long preValue, point addPoint)
 {
 	dirmark changeList(59, hasher);
@@ -466,7 +332,6 @@ inline bool GoBang::isInBoard(point p)
 
 inline GoBang::direction GoBang::mapping(int i)
 {
-	/*四个正方向*/
 	const direction d1 = { 0, 1 };
 	const direction d2 = { 1, 0 };
 	const direction d3 = { 1, -1 };
@@ -542,7 +407,6 @@ void GoBang::getBoundary(char * left, point le, char * right, point ri, directio
 	}
 }
 
-/*复杂的棋型分析，分很多中情况*/
 GoBang::sum GoBang::situaltionAnalysis(int length, char name, char * left, char * right)
 {
 	sum temp;
@@ -646,7 +510,7 @@ GoBang::sum GoBang::situaltionAnalysis(int length, char name, char * left, char 
 }
 
 
-/*整个程序的关键部分 AI智能的来源 主要利用极大极小值算法加上动态规划，α-β裁剪 (其余四个对称函数就不再进行重复解释）*/
+/*α-β剪枝结合动态规划 此段超纲，我也没全理解*/
 tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDeep, int alpha, int beta,point preComMove,point preHumMove)
 {
 	if (endDeep > maxDeep-1)
@@ -659,8 +523,6 @@ tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDee
 	long value;
 	long preValue;
 	bool isbreak = false;
-	//bool reBreak = false;
-	//priority_queue<waitPoint, vector<waitPoint>, cmp> queue;
 	if (fullBoard())
 		return { wholeValue(),false,false };
 	if (deep == endDeep)
@@ -682,7 +544,7 @@ tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDee
 			preValue = wholeValue();
 		for (auto p : temp)
 		{
-			if (value >= beta)   //α裁剪 AI性能提升的关键1
+			if (value >= beta)   //α裁剪 
 			{
 				isbreak = true;
 				break;
@@ -695,7 +557,7 @@ tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDee
 					return { 10000000,false,false };
 				}
 				int nextEndDeep;
-				if (get<2>(p)&&endDeep<=10&&extension)  //冲四外延2层
+				if (get<2>(p)&&endDeep<=10&&extension) 
 					nextEndDeep = endDeep+2;
 				else
 					nextEndDeep = endDeep;
@@ -712,7 +574,6 @@ tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDee
 						reTuple = findHumanMove(dc, deep + 1, nextEndDeep, value, beta, get<0>(p),preHumMove);
 					else
 						reTuple = { wholeValue(preValue,get<0>(p)),false,false };
-					//reBreak = get<1>(reTuple);
 					if (get<2>(reTuple))
 					{
 						unPlace(get<0>(p).x, get<0>(p).y);
@@ -722,10 +583,8 @@ tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDee
 					if(!get<1>(reTuple))
 						zobristMap.insert(make_pair(zobristKey, responseValue));
 				}
-				unPlace(get<0>(p).x, get<0>(p).y);         //取子
-				/*if (deep == 1&&!reBreak)             //顶端findCompMove采用比较然后随机选取的方法
-					queue.push(waitPoint(responseValue, { get<0>(p).x,get<0>(p).y }));*/
-				if (responseValue > value)  //其余全部的findComMove只存放对自己最有利的棋子位置
+				unPlace(get<0>(p).x, get<0>(p).y);       
+				if (responseValue > value)  
 				{
 					value = responseValue;
 					bestMove = { get<0>(p).x,get<0>(p).y };
@@ -735,8 +594,6 @@ tuple<long,bool,bool> GoBang::findCompMove(point  &bestMove, int deep,int endDee
 			}
 		}
 	}
-	//if (deep == 1)
-		//intelligentRandom(bestMove, value, queue);
 	return { value,isbreak,false };
 }
 
@@ -758,7 +615,7 @@ tuple<long,bool,bool> GoBang::findHumanMove(point & bestMove, int deep,int endDe
 		return { wholeValue(),false,false };
 	else
 	{
-		set<point> m_temp = inspireFind(preHumMove, preComMove);  //搜索可能的落子位置
+		set<point> m_temp = inspireFind(preHumMove, preComMove);  
 		vector<tuple<point, long,bool>> temp;
 		for (auto node : m_temp)
 		{
@@ -778,7 +635,7 @@ tuple<long,bool,bool> GoBang::findHumanMove(point & bestMove, int deep,int endDe
 				bestMove = get<0>(p);
 				return { -10000000,false,false };
 			}
-			if (alpha >= value)    //β裁剪 AI性能提升的关键2
+			if (alpha >= value)    //β裁剪
 			{
 				isbreak = true;
 				break;
@@ -786,7 +643,7 @@ tuple<long,bool,bool> GoBang::findHumanMove(point & bestMove, int deep,int endDe
 			if (isEmpty(get<0>(p).x, get<0>(p).y))
 			{
 				int nextEndDeep;
-				if (get<2>(p)&&endDeep<=10&&extension)  //冲四外延2层
+				if (get<2>(p)&&endDeep<=10&&extension)  
 					nextEndDeep = endDeep+2;
 				else
 					nextEndDeep = endDeep;
@@ -911,7 +768,7 @@ inline bool GoBang::judge(point p, char name)
 	return false;
 }
 
-/*启发式搜索 AI性能提升的关键3*/
+/*启发式搜索 */
 set<point> GoBang::inspireFind(point preMePoint, point preHePoint)
 {
 	sum me, he;
@@ -1032,7 +889,7 @@ set<point> GoBang::inspireFind(point preMePoint, point preHePoint)
 	{
 		for (int i = 0; i < 15; i++)
 			for (int j = 0; j < 15; j++)
-				if (isEmpty(i, j) && hasNeighbor({ i,j }))  //只取两步之内有邻居的结点位置
+				if (isEmpty(i, j) && hasNeighbor({ i,j }))  
 					Points.insert({ i,j });
 	}
 	return Points;
@@ -1043,7 +900,7 @@ set<point> GoBang::inspireFind()
 	set<point> Points;
 	for (int i = 0; i < 15; i++)
 		for (int j = 0; j < 15; j++)
-			if (isEmpty(i, j) && hasNeighbor({ i,j }))  //只取两步之内有邻居的结点位置
+			if (isEmpty(i, j) && hasNeighbor({ i,j }))  
 				Points.insert({ i,j });
 	return Points;
 }
@@ -1140,7 +997,6 @@ bool GoBang::hasNeighbor(point p, char name,int dir)
 	}
 	return false;
 }
-
 /*避免AI的棋法单一*/
 inline void GoBang::intelligentRandom(point & bestMove, long value, priority_queue<waitPoint, vector<waitPoint>, cmp> &queue)
 {
