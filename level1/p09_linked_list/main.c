@@ -34,14 +34,14 @@ struct ListNode *reverseList(struct ListNode *head) {
     return prev;
 }
 
-ListNode *findNode(ListNode *head, int value) {
+/*ListNode *findNode(ListNode *head, int value) {
     ListNode *current = head;
     while (current != NULL) {
         if (current->value == value) { return current; }
         else current->next = current;
     }
     return NULL;
-}
+}*/
 
 int find(ListNode *head, int value, int j) {
     ListNode *current = head;
@@ -49,10 +49,10 @@ int find(ListNode *head, int value, int j) {
         current->next = current;
     }
     while (1) {
-        if (current != NULL && current->value == value) { return j; }
+        if (current != NULL && current->value == value) {current->value-=1; return j; }
         else break;
     }
-    return 0;
+    return -1;
 }
 
 int main() {
@@ -62,12 +62,9 @@ int main() {
     i = (ListNode *) malloc(sizeof(ListNode));
     i->next = creat(n);
     i->next = reverseList(i->next);
-    if (findNode(i->next, 5) == NULL)printf("-1");
-    else {
     for (int j = 0; j < n; j++) {
-        if (find(i->next, 5, j) != 0)printf("%d ", find(i->next, 5, j));
-        else printf("");
+        find(i->next, 5, j) != -1 ? printf("%d ", find(i->next, 5, j)) : printf("-1");
         }
-    }
+
     return 0;
 }
