@@ -49,10 +49,10 @@ int find(ListNode *head, int value, int j) {
         current->next = current;
     }
     while (1) {
-        if (current != NULL && current->value == value) {current->value-=1; return j; }
-        else break;
+        if (current != NULL && current->value == value) {current->value=value-1; return j; }
+        else return -1;
     }
-    return -1;
+
 }
 
 int main() {
@@ -62,9 +62,8 @@ int main() {
     i = (ListNode *) malloc(sizeof(ListNode));
     i->next = creat(n);
     i->next = reverseList(i->next);
-    for (int j = 0; j < n; j++) {
-        find(i->next, 5, j) != -1 ? printf("%d ", find(i->next, 5, j)) : printf("-1");
+    for (int j = 1; j <= n; j++) {
+        printf("%d ", find(i->next,5,j));
         }
-
     return 0;
 }
