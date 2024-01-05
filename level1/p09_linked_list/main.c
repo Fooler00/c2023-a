@@ -35,28 +35,39 @@ ListNode *findNode(ListNode * head, int value) {
     ListNode * current = head;
     struct ListNode *i;
     i=(ListNode*)malloc(sizeof(ListNode ));
-    (*i).value=1;
     while (current != NULL) {
-        if (current->value == value) {
-            current->value = value-1;
-            return i;
-        }
-        current = current->next;
-        i->value+=1;
+        if (current->value == value) { return i; }
+        else current->next=current;
     }
     return NULL;
+}
+
+int find(ListNode *head, int value, int j) {
+    ListNode *current = head;
+    for (int i = 0; i < j; i++) {
+        current->next = current;
+    }
+    while (1) {
+        if (current != NULL && current->value == value) { return j; }
+        else break;
+    }
+    return 0;
 }
 
 int main()
 {
     int n;
+    scanf("%d",&n);
     struct ListNode *i;
     i=(ListNode*)malloc(sizeof(ListNode ));
     i->next=creat(n);
-    i->next=reverseList(i->next);
-    for(int j=1;j<=n;j++) {
-        if (findNode(i->next, 5) != NULL)printf("%d ", findNode(i->next, 5)->value);
-        else printf("-1");
+    i->next = reverseList(i->next);
+    if (findNode(i->next, 5) == NULL)printf("-1");
+    else {
+        for (int j = 0; j < n; j++) {
+            if (find(i->next, 5, j) != 0)printf("%d", find(i->next, 5, j));
+            else printf("");
+        }
     }
     return 0;
 }
