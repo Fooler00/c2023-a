@@ -18,7 +18,7 @@
 #define IMMKILL   6
 #define DRAW 0
 using namespace std;
-struct point                       //存放棋子坐标
+struct point
 {
 	int x = 0;
 	int y = 0;
@@ -40,16 +40,16 @@ class GoBang
 public:
 	GoBang();
 	~GoBang();
-	void addPiece(int x, int y);        //玩家可调用的落子函数
+	void addPiece(int x, int y);       
 	bool regretChess();
 private:
 	using dirmark = unordered_map<point, vector<bool>,decltype(hasher)*>;
-	struct direction                //存放方向
+	struct direction                
 	{
 		int dx;
 		int dy;
 	};
-	struct sum                     //棋子类型统计
+	struct sum                  
 	{
 		int win5 = 0, alive4 = 0, dalive4 = 0, die4 = 0, alive3 = 0,
 			dalive3 = 0, die3 = 0, alive2 = 0, dalive2 = 0, die2 = 0,
@@ -72,7 +72,7 @@ private:
 			return *this;
 		}
 	};
-	struct waitPoint              //待选坐标点
+	struct waitPoint          
 	{
 		int value;
 		point p;
@@ -80,7 +80,7 @@ private:
 		waitPoint(int v, point p1)
 			:value(v), p(p1) {};
 	};
-	struct cmp                   //比较函数用以优先队列的比较
+	struct cmp                 
 	{
 		bool operator()(const waitPoint &p1, const waitPoint &p2)
 		{
@@ -97,36 +97,35 @@ private:
 	unsigned long long zobristKey;
 	vector<unsigned long long> randomArray[15][15];
 	unordered_map<unsigned long long,long> zobristMap;
-	char chessBoard[15][15];      //棋盘
-	int prieceNumber = 0;         //棋盘中的棋子数
-	inline bool fullBoard();    //判断是否满盘
-	inline bool isEmpty(const int x, const int y);  //判断一点是否为空位置
-	inline void place(int x, int y, char name);                     //实际的放置棋子函数
-	inline void unPlace(int x, int y);                              //取消棋子函数
+	char chessBoard[15][15];      
+	int prieceNumber = 0;         
+	inline bool fullBoard();  
+	inline bool isEmpty(const int x, const int y);  
+	inline void place(int x, int y, char name);                    
+	inline void unPlace(int x, int y);                              
 	inline bool judge(point p,char name);
-	inline void printChess();   //打印棋盘
-	long score(point p, int name,dirmark& mark);  //单点评估函数
+	inline void printChess();  
+	long score(point p, int name,dirmark& mark); 
 	long score(point p, int name,bool& hasddie4);
-	inline long wholeValue(); //全盘评估函数
+	inline long wholeValue(); 
 	//inline long wholeValue(point remove,char name, point add, long curValue);
 	inline long wholeValue(long preValue, point addPoint);
-	inline bool isInBoard(point p);  //判断该坐标是否合法
-	inline direction mapping(int i);  //映射方向
-	inline point nextPoint(point p, direction d, int length);  //计算邻接结点坐标
-	void getLinkPiece(int &length, point &linkPoint, int name, point p, direction d, int pn);  //获取一个坐标的邻接点用以计算连线长度
+	inline bool isInBoard(point p); 
+	inline direction mapping(int i);  
+	inline point nextPoint(point p, direction d, int length); 
+	void getLinkPiece(int &length, point &linkPoint, int name, point p, direction d, int pn); 
 	void setDirMark(point p, char name,int dir, direction d,dirmark& mark);
-	void getBoundary(char * left, point le, char * right, point ri, direction d, char name);      //获取连线方向两边4点以内的所有坐标信息
-	sum situaltionAnalysis(int length, char name, char * left, char * right);                 //分析一点的棋型
-	inline void intelligentRandom(point &bestMove, long value, priority_queue<waitPoint, vector<waitPoint>, cmp> &queue);  //AI智能随机化函数
+	void getBoundary(char * left, point le, char * right, point ri, direction d, char name);    
+	sum situaltionAnalysis(int length, char name, char * left, char * right);                 
+	inline void intelligentRandom(point &bestMove, long value, priority_queue<waitPoint, vector<waitPoint>, cmp> &queue); 
 	bool hasNeighbor(point p,int dir=0);
 	bool hasNeighbor(point p, char name,int dir=0);
-	set<point> inspireFind(point preMePoint,point preHePoint);                           //启发式搜索函数   AI性能提升的关键函数
+	set<point> inspireFind(point preMePoint,point preHePoint);                           //启发式搜索函数   
 	set<point> inspireFind();
 	bool Fobidden();
-	tuple<long,bool,bool> findCompMove(point &bestMove, int deep,int endDeep, int alpha, int beta,point preComMove,point preHumMove);                    //关键的AI对策分析函数1
-	tuple<long,bool,bool> findHumanMove(point &bestMove, int deep,int endDeep, int alpha, int beta,point preComMove,point preHumMove);                   //关键的AI对策分析函数2
-	point iterationDeep(point preCom,point preHum);   //迭代加深 优化速度
-	/*函数用以排序的计算*/
+	tuple<long,bool,bool> findCompMove(point &bestMove, int deep,int endDeep, int alpha, int beta,point preComMove,point preHumMove);                   
+	tuple<long,bool,bool> findHumanMove(point &bestMove, int deep,int endDeep, int alpha, int beta,point preComMove,point preHumMove);                   
+	point iterationDeep(point preCom,point preHum);   
 	bool compareFuc(const tuple<point,long,bool>& p1,const tuple<point,long,bool>& p2);
 	
 };
