@@ -65,7 +65,7 @@ int main()
     if (findNode(i->next, 5) == NULL)printf("-1");
     else {
         for (int j = 0; j < n; j++) {
-            if (find(i->next, 5, j) != 0)printf("%d", find(i->next, 5, j));
+            if (find(i->next, 5, j) != 0)printf("%d ", find(i->next, 5, j));
             else printf("");
         }
     }
